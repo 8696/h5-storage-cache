@@ -6,7 +6,10 @@ const config = {
   },
   output: {
     path: require('path').resolve(__dirname, 'dist'),
-    library: 'Dist',
+    library: 'H5StorageCache',
+  },
+  resolve: {
+    extensions: ['.js', '.ts'],
   },
   module: {
     rules: [
@@ -29,13 +32,7 @@ const config = {
 module.exports = [
   require('webpack-merge')(config, {
     output: {
-      filename: 'dist.node.min.js',
-      libraryTarget: 'commonjs2',
-    }
-  }),
-  require('webpack-merge')(config, {
-    output: {
-      filename: 'dist.min.js',
+      filename: 'h5-storage-cache.min.js',
       libraryTarget: 'umd',
       umdNamedDefine: true
     }

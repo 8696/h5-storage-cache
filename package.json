@@ -1,9 +1,9 @@
 {
-  "name": "build-dist",
+  "name": "h5-storage-cache",
   "version": "0.0.1-alpha.1",
-  "description": "This is an alpha version",
+  "description": "Web local storage cache",
   "author": "long<204084802@qq.com>",
-  "main": "./dist/dist.min.js",
+  "main": "./dist/h5-storage-cache.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack -w --config build.config.js",
@@ -11,8 +11,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/8696/build-dist"
+    "url": "https://github.com/8696/h5-storage-cache"
   },
+  "files": [
+    "dist"
+  ],
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -27,5 +30,9 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {},
-  "keywords": []
+  "keywords": [
+    "cache",
+    "localStorage",
+    "sessionStorage"
+  ]
 }
