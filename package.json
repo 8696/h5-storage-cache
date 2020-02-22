@@ -1,0 +1,31 @@
+{
+  "name": "build-dist",
+  "version": "0.0.1-alpha.1",
+  "description": "This is an alpha version",
+  "author": "long<204084802@qq.com>",
+  "main": "./dist/dist.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack -w --config build.config.js",
+    "build": "webpack -p --config build.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/8696/build-dist"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "merge": "^1.2.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.19.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {},
+  "keywords": []
+}
