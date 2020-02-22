@@ -41,6 +41,7 @@ interface CacheInterface {
    * @description 配置
    * */
   config: ConfigInterface
+
   /**
    * @description 存储类型
    * */
@@ -84,12 +85,12 @@ interface H5StorageCacheInterface {
   set(key: string, value: any, expireTime?: number): void;
 
   /**
-   * @description 添加缓存
+   * @description 获取指定 key 缓存
    * */
   get(key: string): any
 
   /**
-   * @description 指定 key 是否存在
+   * @description 判断指定 key 是否存在
    * */
   has(key: string): boolean
 
@@ -104,12 +105,12 @@ interface H5StorageCacheInterface {
   remove(key: string): void
 
   /**
-   * @description 清除所有
+   * @description 清除所有缓存
    * */
   clear(): void
 
   /**
-   * @description 获取缓存的个数
+   * @description 获取缓存的数量
    * */
   getLength(): number
 
