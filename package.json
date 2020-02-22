@@ -32,6 +32,7 @@
   "dependencies": {},
   "keywords": [
     "cache",
+    "storage",
     "localStorage",
     "sessionStorage"
   ]

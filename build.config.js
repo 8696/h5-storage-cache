@@ -19,12 +19,15 @@ const config = {
           {loader: 'babel-loader'}
         ],
         exclude: /node_modules/,
+
       },
       {
         test: /\.ts$/,
         use: [
-          {loader: 'ts-loader'}
+          {loader: 'babel-loader'},
+          {loader: 'ts-loader'},
         ],
+
       }
     ]
   },
