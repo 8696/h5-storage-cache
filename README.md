@@ -76,10 +76,10 @@
    * @method 获取所有缓存
    * getAll(): object[]
    *
-   * @description 清除已经过期的缓存
+   * @method 清除已经过期的缓存
    * clearExpire(): void
    * 
-   * @description 获取指定 key 的信息
+   * @method 获取指定 key 的信息
    * getInfo(key: string): object
    *
    * */
