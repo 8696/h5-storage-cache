@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script src="../dist/h5-storage-cache.min.js"></script>
+<script>
+  let h5StorageCache = new H5StorageCache();
+
+  h5StorageCache.set('name1', '001', 5000);
+  h5StorageCache.set('name2', '002', 10000);
+
+  setTimeout(function () {
+    // 清除已经过期
+    h5StorageCache.clearExpire();
+  }, 11000);
+
+
+</script>
+</body>
+</html>

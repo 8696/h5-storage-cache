@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script src="../dist/h5-storage-cache.min.js"></script>
+<script>
+  let h5StorageCache = new H5StorageCache();
+  for (let i = 0; i < 10; i++) {
+    h5StorageCache.set('name' + i, new Date().getTime());
+  }
+  console.log(h5StorageCache.getAll())
+</script>
+</body>
+</html>

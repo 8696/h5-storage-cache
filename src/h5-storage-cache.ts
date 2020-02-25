@@ -1,5 +1,8 @@
 import * as utils from './utils';
 
+const packageInfo = require('../package.json');
+
+
 interface StorageInterface {
   /**
    * Returns the number of key/value pairs currently present in the list associated with the object.
@@ -128,6 +131,11 @@ interface H5StorageCacheInterface {
    * @description 清除已经过期的缓存
    * */
   clearExpire(): void
+
+  /**
+   * @description 获取指定 key 的信息
+   * */
+  getInfo(key: string): object | null
 }
 
 interface DataInterface {
@@ -139,6 +147,12 @@ interface DataInterface {
    * @description 值
    * */
   value: any
+  /**
+   * @description key
+   * */
+  key: string
+
+  cacheInstance: H5StorageCacheInterface
 
   /**
    * @description 将本对象转成适合存储的 json
@@ -158,7 +172,8 @@ interface DataInterface {
 }
 
 class Data implements DataInterface {
-  constructor(key, value, expireTime) {
+  constructor(cacheInstance, key, value, expireTime) {
+    this.cacheInstance = cacheInstance;
     this.key = key;
     this.value = value;
     this.expireTime = expireTime;
@@ -167,6 +182,7 @@ class Data implements DataInterface {
   expireTime: number;
   value: any;
   key: string;
+  cacheInstance: H5StorageCacheInterface;
 
   toStorageJson(): string {
     if (this.expireTime !== -1) {
@@ -174,6 +190,9 @@ class Data implements DataInterface {
     }
     let json = JSON.parse(JSON.stringify(this));
     delete json.key;
+    delete json.cacheInstance;
+    json.saveTime = new Date().getTime();
+    json.v = packageInfo.version;
     return JSON.stringify(json);
   }
 
@@ -185,7 +204,11 @@ class Data implements DataInterface {
   }
 
   isExpire(): boolean {
-    return new Date().getTime() < this.expireTime || this.expireTime === -1;
+    let bool = new Date().getTime() < this.expireTime || this.expireTime === -1;
+    if (!bool) {
+      this.cacheInstance.remove(this.key);
+    }
+    return bool;
   }
 }
 
@@ -222,7 +245,6 @@ class Cache implements CacheInterface {
     return this.config.prefix + inputKey;
   }
 
-
   parseInputKey(storageKey: string): string {
     return storageKey.replace(new RegExp(`^` + this.config.prefix), '');
   }
@@ -230,8 +252,12 @@ class Cache implements CacheInterface {
 
 class H5StorageCache extends Cache implements H5StorageCacheInterface {
   constructor(options: ConfigInterface) {
+
     super(options);
+    this.v = packageInfo.version;
   }
+
+  v: string;
 
   set(key: string, value: any, expireTime?: number): void {
     if (!['string'].includes(utils.valueType(key))) {
@@ -249,7 +275,7 @@ class H5StorageCache extends Cache implements H5StorageCacheInterface {
       }
     }
     !expireTime && (expireTime = this.config.expireTime);
-    this.storage.setItem(this.makeKey(key), new Data(key, value, expireTime).toStorageJson());
+    this.storage.setItem(this.makeKey(key), new Data(this, key, value, expireTime).toStorageJson());
 
   }
 
@@ -262,7 +288,7 @@ class H5StorageCache extends Cache implements H5StorageCacheInterface {
       return null;
     }
     let objStorageData = JSON.parse(storageData);
-    return new Data(key, objStorageData.value, objStorageData.expireTime).getValue();
+    return new Data(this, key, objStorageData.value, objStorageData.expireTime).getValue();
   }
 
   has(key: string): boolean {
@@ -271,7 +297,7 @@ class H5StorageCache extends Cache implements H5StorageCacheInterface {
       return false;
     }
     let objStorageData = JSON.parse(storageData);
-    return new Data(key, objStorageData.value, objStorageData.expireTime).isExpire();
+    return new Data(this, key, objStorageData.value, objStorageData.expireTime).isExpire();
   }
 
   isExpire(key: string): boolean {
@@ -280,7 +306,7 @@ class H5StorageCache extends Cache implements H5StorageCacheInterface {
       return false;
     }
     let objStorageData = JSON.parse(storageData);
-    return new Data(key, objStorageData.value, objStorageData.expireTime).isExpire();
+    return new Data(this, key, objStorageData.value, objStorageData.expireTime).isExpire();
   }
 
   remove(key: string): void {
@@ -337,6 +363,39 @@ class H5StorageCache extends Cache implements H5StorageCacheInterface {
         this.remove(key);
       }
     });
+  }
+
+  getInfo(key: string): object | null {
+    if (!['string'].includes(utils.valueType(key))) {
+      throw new Error('Key can only be a \'string\'');
+    }
+    let has = this.has(key);
+    if (!has) {
+      return null;
+    }
+    let storageData: string | null = this.storage.getItem(this.makeKey(key));
+    if (storageData === null) {
+      return null;
+    }
+    let objStorageData = JSON.parse(storageData);
+    objStorageData.key = key;
+    objStorageData.storageKey = this.makeKey(key);
+    //
+    let v = objStorageData.v;
+    delete objStorageData.v;
+
+    objStorageData.saveTimeVisual = utils.parseDateTime({
+      format: 'y-m-d h:i:s',
+      timestamp: objStorageData.saveTime
+    });
+
+    objStorageData.expireTimeVisual = objStorageData.expireTime === -1 ? -1 : utils.parseDateTime({
+      format: 'y-m-d h:i:s',
+      timestamp: objStorageData.expireTime
+    });
+
+    objStorageData.v = v;
+    return objStorageData;
   }
 }
 

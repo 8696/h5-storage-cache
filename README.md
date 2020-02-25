@@ -78,6 +78,9 @@
    *
    * @description 清除已经过期的缓存
    * clearExpire(): void
+   * 
+   * @description 获取指定 key 的信息
+   * getInfo(key: string): object
    *
    * */
 
