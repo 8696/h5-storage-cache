@@ -2,7 +2,7 @@ const config = {
   mode: 'development',
   devtool: 'source-map',
   entry: {
-    index: './src/index.js',
+    index: './src/index.ts',
   },
   output: {
     path: require('path').resolve(__dirname, 'dist'),
